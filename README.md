@@ -1,9 +1,9 @@
-# **Ios NfcManager Library Documentation**
+# **Androiod NfcManager Library Documentation**
 
 Welcome to the comprehensive documentation for utilizing the NfcManager
 library, facilitating the reading and writing operations for
-IsoDep NFC cards. This library streamlines the process for
-developers working on Ios native or React Native applications,
+IsoDep,MifareClassic NFC cards. This library streamlines the process for
+developers working on Android native or React Native applications,
 enabling convenient integration of NFC card functionality.
 
 ## **Key Features**
@@ -14,7 +14,7 @@ enabling convenient integration of NFC card functionality.
 -   **Start Nfc Detection**: Initiate NFC detection for card
     interaction.
 
--   **Get Card Serial Number**: Retrieve the serial
+-   **Get Card Serial Number (for IsoDep Cards)**: Retrieve the serial
     number of the detected IsoDep card.
 
 -   **Close Nfc Detection**: Terminate NFC detection when the operation
@@ -23,121 +23,89 @@ enabling convenient integration of NFC card functionality.
 ## **Who is this for?**
 
 This documentation caters to developers of all levels who aim to
-incorporate NFC card capabilities into their Ios native Whether
+incorporate NFC card capabilities into their Android native Whether
 you\'re an experienced developer or just starting out, this library
 provides a straightforward path to accomplish your objectives.
 
-## Requirements
-
-- iOS 13.0+
-- Xcode 11.0+
-- Swift 5.0+
-
 ## **Installation**
-## **Integration with Xcode**
 
--   **Open Xcode**: Launch Xcode and open your Xcode project.
--   **Link Frameworks and Libraries**:
+-   **Open Android Studio**: Launch Android Studio and open your
+    existing project.
 
-    -   In your Xcode project settings, navigate to the "General" tab.
+-   **Access Project Structure**: Navigate to File \> Project Structure.
 
-    -   Scroll down to the "Frameworks, Libraries, and Embedded Content" section.
+-   **Manage Dependencies**: Proceed to the Dependencies tab.
 
-    -   Click the "+" button to add a new framework.
+-   **Add Dependency**:
 
-    -   Select the framework you added in the previous step from the list and click "Add".
-      ![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/1.jpeg)
+    -   Click the \"Add\" button and select \"JAR/AAR dependency\".
 
+    -   Locate the downloaded JAR/AAR file for your library (e.g.,
+        NfcManager.aar) in the \"File Selection\" dialog, and paste the
+        full path into the field.
 
--   **Import Framework**:
+-   **Add and Sync Gradle**: Click \"OK\" to add the dependency. Android
+    Studio will automatically trigger a Gradle sync to update your
+    project configuration.
 
-    -   In your source files where you want to use the framework, import it using `#import <FrameworkName/FrameworkName.h>`.
+**Usage**
 
--   **Build and Run**: Build your project to ensure that the integration was successful.
+Import the necessary module at the top of your file:
 
-### Adding Near Field Communication Tag Reading Capability
+![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/e4112785ca1ca1682cf455a2f6fa19d7a4af1bf0.png)
 
-1. Open your project in Xcode.
+Initialize the NfcManager:
 
-2. Navigate to the project settings by clicking on the project name in the project navigator.
+![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/47aa5a84502968ccc831b8936f60f4d92b3a5769.png)
 
-3. Select your app target under "Targets".
+In the **onCreate** function:
 
-4. Go to the "Signing & Capabilities" tab.
-
-5. Click the "+ Capability" button to add a new capability.
-
-6. Search for "Near Field Communication Tag Reading" in the search bar and select it from the list.
-
-7. Close the capability window.
-
-8. Save your changes.
-
-Now your app has the Near Field Communication Tag Reading capability enabled, allowing it to read NFC tags. Ensure that you have configured the necessary permissions and usage descriptions in your app's Info.plist file.
-
-
-### Pod Info Editing
-
-In order to enable NFC functionality in your iOS app, you need to make some edits to your project's Info.plist file.
-
-1. Open your project's Info.plist file.
-
-2. Add the following key-value pairs:
-
-    ```xml
-    <key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
-    <array>
-        <string>4D544A32303530333201</string>
-    </array>
-    ```
-
-    This array contains the ISO 7816 select identifiers for your NFC tags. Make sure to replace these values with the appropriate identifiers for your specific use case.
-
-3. Add the following key-value pair:
-
-    ```xml
-    <key>NFCReaderUsageDescription</key>
-    <string>nfcTag</string>
-    ```
-
-    This key-value pair specifies the usage description for NFC reader in your app. Replace "nfcTag" with your desired description.
-
-4. Save the changes to your Info.plist file.
-### Entitlements File Editing
-
-1. Open your project's entitlements file (`YourApp.entitlements`).
-
-2. Add the following entitlement key:
-
-    ```xml
-    <key>com.apple.developer.nfc.readersession.formats</key>
-    <array>
-        <string>TAG</string>
-    </array>
-    ```
-
+![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/648e358db161e346f30d292842cd8085322dd991.png)
 
 ## **Available Functions**
 
--   **isAvailable():** Check if NFC is available on the device (returns
+-   **isEnabled():** Check if NFC is enabled on the device (returns
     Boolean: true/false).
 
--   **start(session: NFCTagReaderSession):** Begin listening for NFC tags.
+-   **start():** Begin listening for NFC tags.
 
--   **connectTag(tag: NFCTag, session: NFCTagReaderSession) async throws -> Bool:** Connect to an NFC tag (throws an error if connection fails).
+-   **registerTagEvent():** Register for NFC tag events.
 
--   **invalidate(errorMessage: String?):** Invalidate the current session (optionally with an error message).
+-   **requestTechnology(tags: ArrayList\<String\>):** Request NFC
+    technologies (accepts an array of NFC tag types).
 
--   **getSerailCard(tag: NFCISO7816Tag) async throws -> GeneralResponse:** Retrieve the serial number of an IsoDep card (returns a `GeneralResponse` object containing the serial number or error).
+-   **getSerialCard(tag: Tag, tech: String):** Retrieve the serial
+    number of an IsoDep card (returns a String).
 
--   **readIsoDepCard(tag: NFCISO7816Tag) async throws -> NfcReadModel:** Read data from an IsoDep card (returns an `NfcReadModel` object containing read data or error).
+-   **readIsoDepCard(tag: Tag, tech: String):** Read data from an IsoDep
+    card (returns an object containing read data, card serial, and
+    isError).
 
--   **writeIsoDepCard(dataDecoded: String, tag: NFCISO7816Tag) async throws -> NfcReadModel:** Write data to an IsoDep card (throws an error if write fails, returns an `NfcReadModel` object containing response of write, card serial, and error).
+-   **writeIsoDepCard(tag: Tag, tech: String, bytes: ByteArray):** Write
+    data to an IsoDep card (returns an object containing response of
+    write \*should return 144 if everything go correctly , card serial,
+    and isError).
 
+-   **readMifareClassicCard(tag: Tag, pwd: ArrayList\<Byte\>):** Read
+    data from a Mifare Classic card (requires authentication with a
+    password, returns an object containing read data and isError).
 
-## **Example Usage (IsoDepNfcManager - Swift)**
+-   **writeMifareClassicCard(tag: Tag, pwd: ArrayList\<Byte\>, bytes:
+    ByteArray):** Write data to a Mifare Classic card (requires
+    authentication with a password, returns an object containing
+    response of write \*should return success if everything go
+    correctly\* and isError).
 
+-   **close():** Unregister NFC detection when operations are complete.
 
-![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/2.jpeg)
-![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/3.jpeg)
-![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/4.jpeg)
+## **Example Usage (IsoDepNfcManager - Kotlin)**
+
+![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/ae85872fb8405df4ead75d384af11dc5d34b8f9f.png)
+
+![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/2ae1ec3f88b32b146dd01cd61d87489e62fbebd4.png)
+
+## **Example Usage (MifareClassicNfcManager - Kotlin)**
+
+![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/f56cef32392641142360fc9e69012b85d80f5f45.png)
+
+![alt text](https://github.com/ahmedMohHegazy/sdkPdf/blob/main/image4.png)
